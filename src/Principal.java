@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Principal {
     private static UsuarioDAO usuarioDAO = new UsuarioDAO();
-    private static Usuario usuarioActual;
+    private static User userActual;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -26,7 +26,7 @@ public class Principal {
                     iniciarSesion(scanner);
                     break;
                 case 3:
-                    if (usuarioActual != null) {
+                    if (userActual != null) {
                         gestionarPerfil(scanner);
                     } else {
                         System.out.println("Debe iniciar sesión primero.");
@@ -54,8 +54,8 @@ public class Principal {
         System.out.print("Ingrese su nombre: ");
         String nombre = scanner.nextLine();
 
-        Usuario nuevoUsuario = new Usuario(username, password, email, nombre);
-        if (usuarioDAO.registrarUsuario(nuevoUsuario)) {
+        User nuevoUser = new User(username, password, email, nombre);
+        if (usuarioDAO.registrarUsuario(nuevoUser)) {
             System.out.println("Usuario registrado con éxito.");
         } else {
             System.out.println("Error al registrar el usuario.");
@@ -69,10 +69,10 @@ public class Principal {
         System.out.print("Ingrese su contraseña: ");
         String password = scanner.nextLine();
 
-        Usuario usuario = usuarioDAO.iniciarSesion(username, password);
-        if (usuario != null) {
-            usuarioActual = usuario;
-            System.out.println("Inicio de sesión exitoso. Bienvenido " + usuario.getNombre());
+        User user = usuarioDAO.iniciarSesion(username, password);
+        if (user != null) {
+            userActual = user;
+            System.out.println("Inicio de sesión exitoso. Bienvenido " + user.getNombre());
         } else {
             System.out.println("Credenciales incorrectas.");
         }
@@ -81,8 +81,8 @@ public class Principal {
     // Gestionar perfil del usuario actual
     private static void gestionarPerfil(Scanner scanner) {
         System.out.println("\n--- Gestión de Perfil ---");
-        System.out.println("Nombre: " + usuarioActual.getNombre());
-        System.out.println("Email: " + usuarioActual.getEmail());
+        System.out.println("Nombre: " + userActual.getNombre());
+        System.out.println("Email: " + userActual.getEmail());
 
         System.out.println("\n¿Qué desea actualizar?");
         System.out.println("1. Contraseña");
@@ -96,24 +96,24 @@ public class Principal {
             case 1:
                 System.out.print("Ingrese su nueva contraseña: ");
                 String nuevaPassword = scanner.nextLine();
-                usuarioActual.setPassword(nuevaPassword);
+                userActual.setPassword(nuevaPassword);
                 break;
             case 2:
                 System.out.print("Ingrese su nuevo email: ");
                 String nuevoEmail = scanner.nextLine();
-                usuarioActual.setEmail(nuevoEmail);
+                userActual.setEmail(nuevoEmail);
                 break;
             case 3:
                 System.out.print("Ingrese su nuevo nombre: ");
                 String nuevoNombre = scanner.nextLine();
-                usuarioActual.setNombre(nuevoNombre);
+                userActual.setNombre(nuevoNombre);
                 break;
             default:
                 System.out.println("Opción no válida.");
         }
 
         // Actualizar en la base de datos
-        if (usuarioDAO.actualizarUsuario(usuarioActual)) {
+        if (usuarioDAO.actualizarUsuario(userActual)) {
             System.out.println("Perfil actualizado con éxito.");
         } else {
             System.out.println("Error al actualizar el perfil.");
